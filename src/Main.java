@@ -32,9 +32,29 @@ public class Main {
             System.out.println((i + 1) + ". " + especies.get(i));
         }
 
-        System.out.print("Digite o número do Pokémon: ");
-        int escolha = scanner.nextInt();
-        scanner.nextLine(); // Consumir quebra de linha
+        int escolha;
+
+        // loop até receber um número válido
+        while (true) {
+            System.out.print("Digite o número do Pokémon: ");
+
+            if (scanner.hasNextInt()) {
+                escolha = scanner.nextInt();
+                scanner.nextLine(); // consumir quebra de linha
+
+                // validar intervalo
+                if (escolha >= 1 && escolha <= especies.size()) {
+                    break; // ok! sai do while
+                } else {
+                    System.out.println("Número inválido! Escolha entre 1 e " + especies.size() + ".");
+                }
+
+            } else {
+                System.out.println("Entrada inválida! Digite apenas números.");
+                scanner.nextLine(); // descartar entrada errada
+            }
+        }
+
         String especieJog = especies.get(escolha - 1);
 
         System.out.print("Dê um apelido para ele: ");
@@ -99,7 +119,6 @@ public class Main {
 
             if (bot.getAtacar()){
 
-
                 List<Ataque> ataques = bot.getAtaques();
                 Ataque ataqueEscolhido = ataques.get(new Random().nextInt(ataques.size()));
                 bot.atacar(player,ataqueEscolhido);
@@ -148,9 +167,28 @@ public class Main {
         System.out.println("3. Evasiva!");
 
         int acao = 0;
-        try {
-            acao = Integer.parseInt(scanner.nextLine());
-        } catch (NumberFormatException e) { acao = 1; }
+
+        while (true) {
+            System.out.print("Escolha umas das opções acima: ");
+            String input = scanner.nextLine();
+
+            // Verificar se é número
+            try {
+                acao = Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Entrada inválida! Digite apenas números de 1 a 3.");
+                continue; // volta pro início do while
+            }
+
+            // Verificar faixa permitida
+            if (acao < 1 || acao > 3) {
+                System.out.println("Opção inválida! Digite apenas 1, 2 ou 3.");
+                continue;
+            }
+
+            break; // saiu porque agora a entrada está válida
+        }
+
 
         if (acao == 3){
 

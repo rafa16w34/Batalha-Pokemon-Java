@@ -45,7 +45,7 @@ public enum Tipo {
             };
 
             case TERRA -> switch (tipoDefensor){
-                case ELETRICO -> 2.0;//Terra é forte contra elétrico
+                case ELETRICO,FOGO -> 2.0;//Terra é forte contra elétrico
                 case PLANTA -> 0.5;//Terra é fraco contra planta e água
                 default -> 1.0;
             };
