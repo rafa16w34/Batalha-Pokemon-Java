@@ -101,6 +101,10 @@ public class Main {
 
 
             realizarTurnoJogador(scanner, player);
+
+            int turnos = player.getTurnos() + 1;
+            player.setTurnos(turnos);
+
             realizarTurnoBot(bot, player);
 
 
@@ -121,7 +125,7 @@ public class Main {
 
                 List<Ataque> ataques = bot.getAtaques();
                 Ataque ataqueEscolhido = ataques.get(new Random().nextInt(ataques.size()));
-                bot.atacar(player,ataqueEscolhido);
+                bot.atacar(bot,player,ataqueEscolhido);
 
             }
 
@@ -160,11 +164,19 @@ public class Main {
         atacante.setDesviar(false);
         atacante.setCurar(false);
         atacante.setAtacar(false);
+        boolean podeMegaEvoluir = atacante.getMegaEvolucao();
+        boolean podeEvoluir = atacante.getItemEvolucao();
 
         System.out.println("\n SUA VEZ! O que deseja fazer?");
         System.out.println("1. Atacar");
         System.out.println("2. Curar (Custo: 1 Poção)");
         System.out.println("3. Evasiva!");
+
+        if (podeMegaEvoluir && podeEvoluir){
+
+            System.out.println("4. Mega Evoluir!");
+
+        }
 
         int acao = 0;
 
@@ -181,9 +193,16 @@ public class Main {
             }
 
             // Verificar faixa permitida
-            if (acao < 1 || acao > 3) {
-                System.out.println("Opção inválida! Digite apenas 1, 2 ou 3.");
-                continue;
+            if(!podeMegaEvoluir) {
+                if (acao < 1 || acao > 3) {
+                    System.out.println("Opção inválida! Digite apenas 1, 2 ou 3.");
+                    continue;
+                }
+            }else{
+                if (acao < 1 || acao > 4) {
+                    System.out.println("Opção inválida! Digite apenas 1, 2 ou 3.");
+                    continue;
+                }
             }
 
             break; // saiu porque agora a entrada está válida
@@ -199,9 +218,13 @@ public class Main {
             if (atacante.getPocoes() > 0) {
                 atacante.setCurar(true);
             }else{
-                System.out.println("ERRO: Poções insufucientes!");
+                System.out.println("ERRO: Poções insuficientes!");
                 realizarTurnoJogador(scanner,atacante);
             }
+
+        } else if (acao == 4){//Megaevolui o pokemon
+
+            atacante.megaEvoluir();
 
         } else {
 
@@ -223,7 +246,7 @@ public class Main {
 
         if (index < 0 || index >= ataques.size()) index = 0; // Default attack
 
-        atacante.atacar(alvo, ataques.get(index));
+        atacante.atacar(atacante,alvo, ataques.get(index));
     }
 
     private static void realizarTurnoBot(Pokemon atacante, Pokemon alvo) {
@@ -231,6 +254,16 @@ public class Main {
         atacante.setDesviar(false);
         atacante.setCurar(false);
         atacante.setAtacar(false);
+        boolean podeMegaEvoluir = atacante.getMegaEvolucao();
+        boolean podeEvoluir = atacante.getItemEvolucao();
+
+
+        if (podeMegaEvoluir && podeEvoluir){
+
+            atacante.megaEvoluir();
+            boolean botMegaEvoluido = true;
+
+        }
 
         // IA Simples: Se vida < 30% e tem poção, cura. Senão, ataca aleatoriamente.
         if (atacante.getVida() < (atacante.getVidaMaxima() * 0.3) && atacante.getPocoes() > 0) {

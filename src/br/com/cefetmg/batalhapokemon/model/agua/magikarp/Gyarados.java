@@ -15,7 +15,9 @@ public class Gyarados extends Magikarp {
         this.ataque = (double) 125.0F;
         this.defesa = (double) 79.0F;
         this.velocidade = (double) 81.0F;
+        this.itemEvolucaoStr = "Gyaradosite";
         this.adicionarAtaque(new Ataque("Hidro Pump", 110, Tipo.AGUA));
+        this.megaevolucao = true;
     }
 
     public Pokemon evoluir() {

@@ -23,6 +23,8 @@ public abstract class Pokemon {
     protected boolean desviar;
     protected boolean atacar;
     protected boolean curar;
+    protected boolean megaevolucao; //Verifica se o pokemon pode megaevoluir
+    protected int turnos = 0; //Conta quantos turnos esse pokemon teve
 
 
     protected int experiencia = 0;
@@ -63,7 +65,7 @@ public abstract class Pokemon {
 
     // --- Lógica de Batalha ---
 
-    public void atacar(Pokemon oponente, Ataque golpe) {
+    public void atacar(Pokemon atacante,Pokemon oponente, Ataque golpe) {
 
         System.out.printf("⚔️ %s usou %s!%n", this.apelido, golpe.nome());
 
@@ -84,8 +86,8 @@ public abstract class Pokemon {
             }
 
             // Dano: (Atk * Poder / 20) - (Def / 3) * Multiplicador
-            double danoBase = ((double) golpe.poder() - oponente.getDefesa());
-            double danoReal = Math.max(1, (danoBase - multiplicador) / 5);
+            double danoBase = ((   atacante.ataque + (double) golpe.poder()) - oponente.getDefesa());
+            double danoReal = Math.max(1, (danoBase * multiplicador) / 5);
 
             oponente.receberDano(danoReal);
 
@@ -97,11 +99,19 @@ public abstract class Pokemon {
                 this.pocoes++;
                 System.out.println("💊 " + this.apelido + " ganhou uma Poção de Cura por bons ataques!");
 
-                if (this.especie.equals("Pikachu") || this.especie.equals("Graveler") || this.especie.equals("Growlithe")) {
+                if (!itemEvolucao){
+                if (this.especie.equals("Pikachu") || this.especie.equals("Graveler") || this.especie.equals("Growlithe") || this.especie.equals("Raichu") || this.especie.equals("Gyarados")) {
 
-                    System.out.println(this.apelido + " encontrou um(a) " + this.itemEvolucaoStr + ". Agora ele pode evoluir!");
-                    itemEvolucao = true;
+                    if (!megaevolucao) {
+                        System.out.println(this.apelido + " encontrou um(a) " + this.itemEvolucaoStr + ". Agora ele pode evoluir!");
+                        itemEvolucao = true;
+                    }else{
+                        System.out.println(this.apelido + " encontrou um(a) " + this.itemEvolucaoStr + ". Agora ele pode Mega Evoluir!");
+                        itemEvolucao = true;
+                    }
 
+
+                }
                 }
 
 
@@ -197,11 +207,35 @@ public abstract class Pokemon {
 
             // Mantém a porcentagem de vida atual ou cura? Vamos curar na evolução (bônus)
             System.out.println("🎉 " + this.apelido + " se tornou um " + evoluido.especie + "!\n");
+            this.itemEvolucao = false;
             return evoluido;
         }
 
 
         return this;
+    }
+
+    public void megaEvoluir(){
+
+        if (megaevolucao && this.itemEvolucao){
+
+            System.out.println("\n✨✨ " + this.apelido + " está reagindo a "+ this.itemEvolucaoStr + "! ✨✨");
+
+            this.vida = this.vida *5;
+            this.vidaMaxima = this.vidaMaxima *5;
+            this.ataque = this.ataque *5;
+            this.defesa = this.defesa *5;
+            this.velocidade = this.velocidade *5;
+
+            // Mantém a porcentagem de vida atual ou cura? Vamos curar na evolução (bônus)
+            System.out.println("🎉 " + this.apelido + " se tornou um  Mega " + this.especie + "!\n");
+
+            this.megaevolucao = false;
+
+        }
+
+
+
     }
 
     // Métodos abstratos e auxiliares
@@ -233,12 +267,23 @@ public abstract class Pokemon {
     public boolean getCurar(){//Getter de desviar
         return this.curar;
     }
+    public int getTurnos(){//Getter de desviar
+        return this.turnos;
+    }
+    public boolean getMegaEvolucao(){//Getter de desviar
+        return this.megaevolucao;
+    }
+    public boolean getItemEvolucao(){//Getter de desviar
+        return this.itemEvolucao;
+    }
 
 
     //Setters
     public void setDesviar(boolean status){this.desviar = status;}
     public void setAtacar(boolean status){this.atacar = status;}
     public void setCurar(boolean status){this.curar = status;}
+    public void setMegaevolucao(boolean status){this.megaevolucao = status;}
+    public void setTurnos (int total){this.turnos = total;}
 
     // Construtor protegido para cópia de dados na evolução
     protected void copiarDados(Pokemon antigo) {

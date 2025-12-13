@@ -15,8 +15,9 @@ public class Raichu extends Pikachu {
         this.ataque = (double)90.0F;
         this.defesa = (double)55.0F;
         this.velocidade = (double)110.0F;
-        this.itemEvolucaoStr = "Pedra do Trovão";
+        this.itemEvolucaoStr = "Raichunite";
         this.adicionarAtaque(new Ataque("Thunder", 110, Tipo.ELETRICO));
+        this.megaevolucao = true;
     }
 
     public Pokemon evoluir() {
