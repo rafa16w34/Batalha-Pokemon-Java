@@ -100,10 +100,8 @@ public class Main {
             System.out.println("-------------------------------------------");
 
 
-            realizarTurnoJogador(scanner, player);
+            realizarTurnoJogador(scanner, player,bot);
 
-            int turnos = player.getTurnos() + 1;
-            player.setTurnos(turnos);
 
             realizarTurnoBot(bot, player);
 
@@ -118,15 +116,22 @@ public class Main {
 
             }
 
-            try { Thread.sleep(1500); } catch (InterruptedException e) {} // Pausa dramática
-            System.out.println("\n------------------------------------------------------------\n");
+            if (bot.estaVivo()) {
 
-            if (bot.getAtacar()){
+                try { Thread.sleep(1500); } catch (InterruptedException e) {} // Pausa dramática
+                System.out.println("\n------------------------------------------------------------\n");
 
-                List<Ataque> ataques = bot.getAtaques();
-                Ataque ataqueEscolhido = ataques.get(new Random().nextInt(ataques.size()));
-                bot.atacar(bot,player,ataqueEscolhido);
+                if (bot.getAtacar()) {
 
+                    List<Ataque> ataques = bot.getAtaques();
+                    Ataque ataqueEscolhido = ataques.get(new Random().nextInt(ataques.size()));
+                    bot.atacar(bot, player, ataqueEscolhido);
+
+                }else if (bot.getCurar()) {
+
+                    bot.usarPocao();
+
+                }
             }
 
             // Checagem de morte antes da evolução
@@ -159,7 +164,7 @@ public class Main {
         System.out.println("===========================================");
     }
 
-    private static void realizarTurnoJogador(Scanner scanner, Pokemon atacante) {
+    private static void realizarTurnoJogador(Scanner scanner, Pokemon atacante, Pokemon oponente) {
 
         atacante.setDesviar(false);
         atacante.setCurar(false);
@@ -211,7 +216,21 @@ public class Main {
 
         if (acao == 3){
 
-            atacante.setDesviar(true);
+            int n = (int) (Math.random() * 2) + 1;
+
+            if (atacante.getVelocidade() > oponente.getVelocidade()) {
+
+                atacante.setDesviar(true);
+
+            }else if (n == 1){
+
+                atacante.setDesviar(true);
+
+            }else{
+
+                System.out.println("\n"+atacante.getApelido()+ " tentou desviar mas falhou! \n");
+
+            }
 
         }else if (acao == 2) {
 
@@ -219,7 +238,7 @@ public class Main {
                 atacante.setCurar(true);
             }else{
                 System.out.println("ERRO: Poções insuficientes!");
-                realizarTurnoJogador(scanner,atacante);
+                realizarTurnoJogador(scanner,atacante,oponente);
             }
 
         } else if (acao == 4){//Megaevolui o pokemon
@@ -240,6 +259,7 @@ public class Main {
         }
 
         int index = 0;
+
         try {
             index = Integer.parseInt(scanner.nextLine()) - 1;
         } catch (NumberFormatException e) {}
@@ -267,7 +287,7 @@ public class Main {
 
         // IA Simples: Se vida < 30% e tem poção, cura. Senão, ataca aleatoriamente.
         if (atacante.getVida() < (atacante.getVidaMaxima() * 0.3) && atacante.getPocoes() > 0) {
-            atacante.usarPocao();
+            atacante.setCurar(true);
         } else {
 
             int n = (int) (Math.random() * 2) + 1;
@@ -278,7 +298,21 @@ public class Main {
 
             } else{
 
-                atacante.setDesviar(true);
+                int d = (int) (Math.random() * 2) + 1;
+
+                if (atacante.getVelocidade() > alvo.getVelocidade()) {
+
+                    atacante.setDesviar(true);
+
+                }else if (d == 1){
+
+                    atacante.setDesviar(true);
+
+                }else{
+
+                    System.out.println("\n"+atacante.getApelido()+ " tentou desviar mas falhou! \n");
+
+                }
 
             }
         }

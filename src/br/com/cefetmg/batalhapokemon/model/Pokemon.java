@@ -24,7 +24,7 @@ public abstract class Pokemon {
     protected boolean atacar;
     protected boolean curar;
     protected boolean megaevolucao; //Verifica se o pokemon pode megaevoluir
-    protected int turnos = 0; //Conta quantos turnos esse pokemon teve
+
 
 
     protected int experiencia = 0;
@@ -67,11 +67,27 @@ public abstract class Pokemon {
 
     public void atacar(Pokemon atacante,Pokemon oponente, Ataque golpe) {
 
+        Tipo tipoGolpe = golpe.tipo();//Definido antes para que, caso seja o Arceus, seja possível alterar depois
+
+        if (atacante.especie.equals("Arceus")) {
+
+            if (golpe.nome().equals("Judgment")){
+
+                double multiplicadorAtual = Tipo.obterMultiplicador(tipoGolpe, oponente.getTipo());
+
+                if (multiplicadorAtual < 2.0) {
+
+                    tipoGolpe = atacante.trocarTipo(atacante,oponente,golpe);
+
+                }
+            }
+        }
+
         System.out.printf("⚔️ %s usou %s!%n", this.apelido, golpe.nome());
 
         if (!oponente.getDesviar()) {
 
-            double multiplicador = Tipo.obterMultiplicador(golpe.tipo(), oponente.getTipo());
+            double multiplicador = Tipo.obterMultiplicador(tipoGolpe, oponente.getTipo());
 
             // Feedback visual e Cálculo de XP
             int xpGanho = 15; // XP Neutro padrão
@@ -162,6 +178,48 @@ public abstract class Pokemon {
 
 
 
+    }
+
+    //Só funciona para o Arceus
+    public Tipo trocarTipo(Pokemon atacante,Pokemon oponente, Ataque golpe ) {
+
+
+
+        Tipo tipoOponente = oponente.tipo;
+        Tipo tipoGolpe = golpe.tipo();
+
+        if (tipoOponente.equals(Tipo.AGUA)) {
+
+            tipoGolpe = Tipo.ELETRICO;
+
+
+        } else if (tipoOponente.equals(Tipo.FOGO)) {
+
+            tipoGolpe = Tipo.AGUA;
+
+        } else if (tipoOponente.equals(Tipo.PLANTA)) {
+
+            tipoGolpe = Tipo.FOGO;
+
+        } else if (tipoOponente.equals(Tipo.ELETRICO)) {
+
+            tipoGolpe = Tipo.TERRA;
+
+        } else if (tipoOponente.equals(Tipo.TERRA)) {
+
+            tipoGolpe = Tipo.PLANTA;
+
+        }
+
+
+        if (!atacante.tipo.equals(tipoGolpe)) {
+            System.out.println("\n" + this.getApelido() + " mudou de tipo usando suas placas!");
+            System.out.println(atacante.getApelido() + " agora é do tipo " + tipoGolpe + "!\n");
+        }
+
+        setTipo(tipoGolpe);
+
+        return tipoGolpe;
     }
 
 
@@ -267,9 +325,6 @@ public abstract class Pokemon {
     public boolean getCurar(){//Getter de desviar
         return this.curar;
     }
-    public int getTurnos(){//Getter de desviar
-        return this.turnos;
-    }
     public boolean getMegaEvolucao(){//Getter de desviar
         return this.megaevolucao;
     }
@@ -282,8 +337,8 @@ public abstract class Pokemon {
     public void setDesviar(boolean status){this.desviar = status;}
     public void setAtacar(boolean status){this.atacar = status;}
     public void setCurar(boolean status){this.curar = status;}
-    public void setMegaevolucao(boolean status){this.megaevolucao = status;}
-    public void setTurnos (int total){this.turnos = total;}
+    public void setTipo(Tipo tipoNovo){this.tipo = tipoNovo;}
+
 
     // Construtor protegido para cópia de dados na evolução
     protected void copiarDados(Pokemon antigo) {

@@ -9,6 +9,7 @@ public enum Tipo {
      * @param tipoDefensor O tipo do Pokémon que recebe o ataque (ex: Fogo).
      * @return 2.0 (Super Efetivo), 0.5 (Não muito efetivo), 1.0 (Neutro) ou 0.0 (Imune).
      */
+
     public static double obterMultiplicador(Tipo tipoAtaque, Tipo tipoDefensor) {
 
 
