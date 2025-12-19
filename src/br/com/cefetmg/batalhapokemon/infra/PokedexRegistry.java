@@ -68,7 +68,7 @@ public class PokedexRegistry {
             return;
         }
 
-        File diretorio = new File(resource.getFile());
+        File diretorio = new File(resource.toURI());
         if (!diretorio.exists()) {
             return;
         }

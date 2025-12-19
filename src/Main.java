@@ -14,7 +14,6 @@ public class Main {
         Random random = new Random();
 
 
-
         // 1. Inicializa e descobre Pokémons (apenas nível 1)
         PokedexRegistry.inicializar("br.com.cefetmg.batalhapokemon.model");
         List<String> especies = PokedexRegistry.getEspeciesDisponiveis();
@@ -100,15 +99,15 @@ public class Main {
             System.out.println("-------------------------------------------");
 
 
-            realizarTurnoJogador(scanner, player,bot);
+            realizarTurnoJogador(scanner, player, bot);
 
 
             realizarTurnoBot(bot, player);
 
 
-            if (player.getAtacar()){
+            if (player.getAtacar()) {
 
-                selecionarAtaque(scanner,player,bot);
+                selecionarAtaque(scanner, player, bot);
 
             } else if (player.getCurar()) {
 
@@ -118,7 +117,10 @@ public class Main {
 
             if (bot.estaVivo()) {
 
-                try { Thread.sleep(1500); } catch (InterruptedException e) {} // Pausa dramática
+                try {
+                    Thread.sleep(1500);
+                } catch (InterruptedException e) {
+                } // Pausa dramática
                 System.out.println("\n------------------------------------------------------------\n");
 
                 if (bot.getAtacar()) {
@@ -127,7 +129,7 @@ public class Main {
                     Ataque ataqueEscolhido = ataques.get(new Random().nextInt(ataques.size()));
                     bot.atacar(bot, player, ataqueEscolhido);
 
-                }else if (bot.getCurar()) {
+                } else if (bot.getCurar()) {
 
                     bot.usarPocao();
 
@@ -141,14 +143,6 @@ public class Main {
             // ATENÇÃO: Se evoluir, a variável player/bot passa a apontar para o novo objeto
             player = player.tentarEvoluir();
             bot = bot.tentarEvoluir();
-
-
-
-
-
-
-
-
 
 
         }
@@ -177,7 +171,7 @@ public class Main {
         System.out.println("2. Curar (Custo: 1 Poção)");
         System.out.println("3. Evasiva!");
 
-        if (podeMegaEvoluir && podeEvoluir){
+        if (podeMegaEvoluir && podeEvoluir) {
 
             System.out.println("4. Mega Evoluir!");
 
@@ -198,12 +192,12 @@ public class Main {
             }
 
             // Verificar faixa permitida
-            if(!podeMegaEvoluir) {
+            if (!podeMegaEvoluir) {
                 if (acao < 1 || acao > 3) {
                     System.out.println("Opção inválida! Digite apenas 1, 2 ou 3.");
                     continue;
                 }
-            }else{
+            } else {
                 if (acao < 1 || acao > 4) {
                     System.out.println("Opção inválida! Digite apenas 1, 2 ou 3.");
                     continue;
@@ -214,7 +208,7 @@ public class Main {
         }
 
 
-        if (acao == 3){
+        if (acao == 3) {
 
             int n = (int) (Math.random() * 2) + 1;
 
@@ -222,26 +216,26 @@ public class Main {
 
                 atacante.setDesviar(true);
 
-            }else if (n == 1){
+            } else if (n == 1) {
 
                 atacante.setDesviar(true);
 
-            }else{
+            } else {
 
-                System.out.println("\n"+atacante.getApelido()+ " tentou desviar mas falhou! \n");
+                System.out.println("\n" + atacante.getApelido() + " tentou desviar mas falhou! \n");
 
             }
 
-        }else if (acao == 2) {
+        } else if (acao == 2) {
 
             if (atacante.getPocoes() > 0) {
                 atacante.setCurar(true);
-            }else{
+            } else {
                 System.out.println("ERRO: Poções insuficientes!");
-                realizarTurnoJogador(scanner,atacante,oponente);
+                realizarTurnoJogador(scanner, atacante, oponente);
             }
 
-        } else if (acao == 4){//Megaevolui o pokemon
+        } else if (acao == 4) {//Megaevolui o pokemon
 
             atacante.megaEvoluir();
 
@@ -262,11 +256,12 @@ public class Main {
 
         try {
             index = Integer.parseInt(scanner.nextLine()) - 1;
-        } catch (NumberFormatException e) {}
+        } catch (NumberFormatException e) {
+        }
 
         if (index < 0 || index >= ataques.size()) index = 0; // Default attack
 
-        atacante.atacar(atacante,alvo, ataques.get(index));
+        atacante.atacar(atacante, alvo, ataques.get(index));
     }
 
     private static void realizarTurnoBot(Pokemon atacante, Pokemon alvo) {
@@ -278,7 +273,7 @@ public class Main {
         boolean podeEvoluir = atacante.getItemEvolucao();
 
 
-        if (podeMegaEvoluir && podeEvoluir){
+        if (podeMegaEvoluir && podeEvoluir) {
 
             atacante.megaEvoluir();
             boolean botMegaEvoluido = true;
@@ -296,7 +291,7 @@ public class Main {
 
                 atacante.setAtacar(true);
 
-            } else{
+            } else {
 
                 int d = (int) (Math.random() * 2) + 1;
 
@@ -304,13 +299,13 @@ public class Main {
 
                     atacante.setDesviar(true);
 
-                }else if (d == 1){
+                } else if (d == 1) {
 
                     atacante.setDesviar(true);
 
-                }else{
+                } else {
 
-                    System.out.println("\n"+atacante.getApelido()+ " tentou desviar mas falhou! \n");
+                    System.out.println("\n" + atacante.getApelido() + " tentou desviar mas falhou! \n");
 
                 }
 
